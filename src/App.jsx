@@ -5,6 +5,7 @@ import ControlTab from './components/ControlTab';
 import Board from './components/Board';
 import style from './App.scss';
 import classnames from 'classnames';
+import DayNode from './components/DayNode';
 
 
 const ModuleDefaults = {
@@ -66,13 +67,6 @@ class App extends React.Component {
     this.data = {};
     this.state = { currentYearMonth: this.option.initYearMonth, dayState: true, event};
   }
-  inputData(data) {
-    for (let i = 0; i < data.length; i++) {
-      this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
-    }
-    this.forceUpdate();
-  }
-
   nextMonth() {
     this.handleClick(1);
   }
@@ -84,6 +78,12 @@ class App extends React.Component {
   }
   resetData(data){
     this.data = {};
+    for (let i = 0; i < data.length; i++) {
+      this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
+    }
+    this.forceUpdate();
+  }
+  inputData(data) {
     for (let i = 0; i < data.length; i++) {
       this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
     }
@@ -115,6 +115,8 @@ class App extends React.Component {
         },
       );
   }
+ 
+
 
   getCurrentNodes(yearMonth) {
     let nodes = [];
@@ -188,6 +190,7 @@ class App extends React.Component {
       // 還沒加資料前， this.data[year]是 undefined
       this.data[year] = {};
     }
+
     if (!this.data[year][month]) {
       this.data[year][month] = {};
     }
@@ -231,6 +234,7 @@ class App extends React.Component {
     this.option.onClickDate(data);
   }
 
+
   handleClick(target) {
     let currentYearMonth = this.state.currentYearMonth;
     // console.log(currentYearMonth)
@@ -245,13 +249,14 @@ class App extends React.Component {
     currentYearMonth = allYearMonth[thisIndex + target].title;
     this.setState(Object.assign(this.state, { currentYearMonth }));
     let getMonthInfo = this.getCurrentNodes(currentYearMonth);
-    this.option.onClickNext(getMonthInfo);  
-    for(let i =0; i<42;i++){
-      if(getMonthInfo[i].price){
+    for (let i = 0; i < 42; i++) {
+      if (getMonthInfo[i].price) {
+        console.log(getMonthInfo[i]);
+      }
     }
-    return getMonthInfo[i];
+    //code refine
   }
-}
+
 
   switchBtn() {
     this.setState(prevState => ({

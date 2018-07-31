@@ -15,7 +15,6 @@ const DayNode = ({ data, currentNode, focused }) => {
   let tag = '';
   let weekDayArr = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
 
-  // console.log(currentNode);
   if (data.status) {
     hasData = style.hasData;
     data.total = '團位' + data.total;
@@ -33,7 +32,6 @@ const DayNode = ({ data, currentNode, focused }) => {
     focus = style.onClickDate;
   }
   
-
   return (
     <li
       onClick={() => focused(data)}
@@ -48,7 +46,6 @@ const DayNode = ({ data, currentNode, focused }) => {
     </li>
   );
 };
-// activeBorderColor
 
 // Board.propTypes = {
 //   title: PropTypes.string,
