@@ -7,7 +7,6 @@ import style from './App.scss';
 import classnames from 'classnames';
 import DayNode from './components/DayNode';
 
-
 const ModuleDefaults = {
   dataSource: [
     // 資料來源的輸入接口 [ array | string ] 如果是 string的話，請輸入網址
@@ -42,23 +41,25 @@ const ModuleDefaults = {
   // @param $data {array} 上一個月的資料
   // @param module {object} 此模組實例物件
   // console.log($btn, data, module);
-  onClickPrev($btn, data, module) {
-    console.log('hi')
+  onClickPrev(data) {
+    console.log(data);
   },
   // 點下一個月時
-  onClickNext($btn, data, module) {
-    console.log($btn, data, module);
+  onClickNext(data) {
+    console.log(data);
   },
   // 點日期時
-  onClickDate($date, data) {
-    console.log($date, data);
+  onClickDate(data) {
+    console.log(data);
   },
 };
 
 class App extends React.Component {
+  //1
   constructor(props) {
     super(props);
     this.option = Object.assign(ModuleDefaults, this.props.config);
+    //assign this.props.config to ModuleDefaults and warum
     this.state = {
       error: null,
       isLoaded: false,
@@ -68,7 +69,6 @@ class App extends React.Component {
     this.state = {
       currentYearMonth: this.option.initYearMonth,
       dayState: true,
-      event,
     };
   }
   nextMonth() {
@@ -94,67 +94,63 @@ class App extends React.Component {
     this.forceUpdate();
   }
 
-    componentDidMount() {
-      if (typeof this.option.dataSource === 'string') {
-        console.log('hi')
-        fetch(this.option.dataSource)
-          .then(res => res.json()) // 與fetch回傳的是xml格式 所以要轉成json檔
-          .then(
-            data => {
-              // prepare this.data
-              for (let i = 0; i < data.length; i++) {
-                this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
-              }
-              // 再轉成json檔
-              this.setState({
-                isLoaded: true,
-              });
-            },
-            // Note: it's important to handle errors here
-            // instead of a catch() block so that we don't swallow
-            // exceptions from actual bugs in components.
-            error => {
-              this.setState({
-                isLoaded: true,
-                error,
-              });
-            },
-          );
-      } else{
-        this.readData(this.option.dataSource);
-      }
+  //3
+  componentDidMount() {
+    if (typeof this.option.dataSource === 'string') {
+      fetch(this.option.dataSource)
+        .then(res => res.json())
+        .then(
+          data => {
+            // prepare this.data
+            for (let i = 0; i < data.length; i++) {
+              this.addEvent(data[i]);
+            }
+            // 再轉成json檔
+            this.setState({
+              isLoaded: true,
+            }); //setState goes to render()
+          },
+          error => {
+            this.setState({
+              isLoaded: true,
+              error,
+            });
+          },
+      );
+    } else {
+      this.readData(this.option.dataSource);
     }
+  }
   readData(data) {
     for (let i = 0; i < data.length; i++) {
-      this.addEvent(data[i]); 
-      // 再轉成json檔
+      this.addEvent(data[i]);
       this.setState({
         isLoaded: true,
-      });// 讓data的每一個放進當作參數，執行addEvent
+      });
     }
-}
+  }
 
-  getCurrentNodes(yearMonth) {
+  getCurrentNodes(currentYearMonth) {
     let nodes = [];
-    const targetYearMonth = moment(yearMonth, 'YYYYMM');
-    const events = this.data[targetYearMonth.get('year')][
+    let targetYearMonth = moment(currentYearMonth, 'YYYYMM');
+    const event = this.data[targetYearMonth.get('year')][
       targetYearMonth.get('month')
     ];
     const monthlyDays = targetYearMonth.daysInMonth();
     const firstWeekDay = targetYearMonth.startOf('month').get('weekday');
     for (let i = 0; i < 42; i++) {
       let day = {};
-      const date = i + 1 - firstWeekDay;
+      let date = i + 1 - firstWeekDay;
       if (i >= firstWeekDay && date <= monthlyDays) {
+        // 每月的日子
         day.day = date;
-        if (events[date]) {
-          day = Object.assign(day, events[date]);
+        if (event[date]) {
+          //如果 每月的日子 裡面 有活動的
+          day = Object.assign(day, event[date]);
         }
-        // console.log(events[date]);
       }
       nodes.push(day);
     }
-    // console.log(nodes[2])
     return nodes;
   }
 
@@ -174,7 +170,7 @@ class App extends React.Component {
   }
 
   getCurrentYearMonthTabs(currentYearMonth) {
-    const allYearMonth = this.getAllYearMonth();
+    const allYearMonth = this.getAllYearMonth(); //array obj
     allYearMonth.push({ title: '', literal: '' });
     allYearMonth.unshift({ title: '', literal: '' });
     const resultCurrentYearMonth = [];
@@ -187,6 +183,7 @@ class App extends React.Component {
         );
       }
     }
+    // console.log(resultCurrentYearMonth); //[{...},{...},{...}]
     return resultCurrentYearMonth;
   }
 
@@ -247,14 +244,14 @@ class App extends React.Component {
         currentNode: data.date,
       }));
     }
-    this.option.onClickDate(data);
+    if (data.price) {
+      this.option.onClickDate(data);
+    }
   }
 
   handleClick(target) {
     let currentYearMonth = this.state.currentYearMonth;
-    // console.log(currentYearMonth)
     const allYearMonth = this.getAllYearMonth();
-    // console.log(allYearMonth)
     let thisIndex;
     for (let i = 0; i < allYearMonth.length; i++) {
       if (allYearMonth[i].title === currentYearMonth) {
@@ -263,20 +260,22 @@ class App extends React.Component {
     }
     currentYearMonth = allYearMonth[thisIndex + target].title;
     this.setState(Object.assign(this.state, { currentYearMonth }));
+    //要更新state狀態 所以更新this.state的currentYearMonth
     let getMonthInfo = this.getCurrentNodes(currentYearMonth);
     for (let i = 0; i < 42; i++) {
       if (getMonthInfo[i].price) {
         console.log(getMonthInfo[i]);
       }
     }
-    //code refine
   }
 
   switchBtn() {
-    this.setState(prevState => ({
-      dayState: !prevState.dayState,
+    this.setState(origState => ({
+      //origState is this.state
+      dayState: !origState.dayState,
     }));
   }
+
   render() {
     if (this.state.isLoaded) {
       const { currentYearMonth, currentNode, dayState } = this.state;
@@ -293,20 +292,21 @@ class App extends React.Component {
             currentYearMonthTabs={this.getCurrentYearMonthTabs(
               currentYearMonth,
             )}
+            // handleClick={target => this.handleClick(target)}
             handleClick={target => this.handleClick(target)}
           />
           <Board
             currentNodes={this.getCurrentNodes(currentYearMonth)}
-            focused={node => this.focused(node)}
+            focused={data => this.focused(data)}
+            // focused={(data) => this.focused(data)}
             currentNode={currentNode}
           />
         </div>
       );
     }
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; //2
   }
 }
-
 
 // export default hot(module)(App);
 export default App;
