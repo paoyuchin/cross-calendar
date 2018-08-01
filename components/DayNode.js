@@ -1,6 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
-import style from '../../App.scss';
+import style from '../css.scss';
 import moment from 'moment/src/moment';
 import { get } from 'http';
 

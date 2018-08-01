@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.jsx';
+import Test from './index.js';
 
 const customSettings = {
   dataSource: './json/data1.json',
@@ -51,7 +51,7 @@ const customSettings = {
 // ]
 
 ReactDOM.render(
-  <App
+  <Test
     ref={app => {
       window.app = app;
     }}

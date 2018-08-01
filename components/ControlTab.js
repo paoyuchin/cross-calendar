@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
-import style from '../../App.scss';
+import style from '../css.scss';
 import 'font-awesome/css/font-awesome.min.css';
 import moment from 'moment/src/moment';
 

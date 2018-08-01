@@ -1,7 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
-import DayNode from '../DayNode';
-import style from '../../App.scss';
+import DayNode from './DayNode';
+import style from '../css.scss';
 
 const Board = ({ currentNodes, currentNode, focused }) => {
   const dayNodes = currentNodes.map((value, i) => (

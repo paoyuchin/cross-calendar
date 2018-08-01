@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
 import moment from 'moment/src/moment';
-import ControlTab from './components/ControlTab';
-import Board from './components/Board';
-import style from './App.scss';
+import ControlTab from './ControlTab';
+import Board from './Board';
+import style from '../css.scss';
 import classnames from 'classnames';
-import DayNode from './components/DayNode';
+import DayNode from './DayNode';
 
 const ModuleDefaults = {
   dataSource: [
