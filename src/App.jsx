@@ -65,18 +65,22 @@ class App extends React.Component {
       data: [], // 1
     };
     this.data = {};
-    this.state = { currentYearMonth: this.option.initYearMonth, dayState: true, event};
+    this.state = {
+      currentYearMonth: this.option.initYearMonth,
+      dayState: true,
+      event,
+    };
   }
   nextMonth() {
     this.handleClick(1);
   }
-  prevMonth(){
+  prevMonth() {
     this.handleClick(-1);
   }
-  switch(){
+  switch() {
     this.switchBtn();
   }
-  resetData(data){
+  resetData(data) {
     this.data = {};
     for (let i = 0; i < data.length; i++) {
       this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
@@ -90,33 +94,45 @@ class App extends React.Component {
     this.forceUpdate();
   }
 
-  componentDidMount() {
-    fetch(this.option.dataSource)
-      .then(res => res.json()) // 與fetch回傳的是xml格式 所以要轉成json檔
-      .then(
-        data => {
-          // prepare this.data
-          for (let i = 0; i < data.length; i++) {
-            this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
-          }
-          // 再轉成json檔
-          this.setState({
-            isLoaded: true,
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          this.setState({
-            isLoaded: true,
-            error,
-          });
-        },
-      );
-  }
- 
-
+    componentDidMount() {
+      if (typeof this.option.dataSource === 'string') {
+        console.log('hi')
+        fetch(this.option.dataSource)
+          .then(res => res.json()) // 與fetch回傳的是xml格式 所以要轉成json檔
+          .then(
+            data => {
+              // prepare this.data
+              for (let i = 0; i < data.length; i++) {
+                this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
+              }
+              // 再轉成json檔
+              this.setState({
+                isLoaded: true,
+              });
+            },
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            error => {
+              this.setState({
+                isLoaded: true,
+                error,
+              });
+            },
+          );
+      } else{
+        this.readData(this.option.dataSource);
+      }
+    }
+  readData(data) {
+    for (let i = 0; i < data.length; i++) {
+      this.addEvent(data[i]); 
+      // 再轉成json檔
+      this.setState({
+        isLoaded: true,
+      });// 讓data的每一個放進當作參數，執行addEvent
+    }
+}
 
   getCurrentNodes(yearMonth) {
     let nodes = [];
@@ -234,7 +250,6 @@ class App extends React.Component {
     this.option.onClickDate(data);
   }
 
-
   handleClick(target) {
     let currentYearMonth = this.state.currentYearMonth;
     // console.log(currentYearMonth)
@@ -257,7 +272,6 @@ class App extends React.Component {
     //code refine
   }
 
-
   switchBtn() {
     this.setState(prevState => ({
       dayState: !prevState.dayState,
@@ -272,7 +286,9 @@ class App extends React.Component {
       const btnClassName = classnames(modeClass);
       return (
         <div className={btnClassName}>
-          <div onClick={() => this.switchBtn()} className={style.switchBtn}>換</div>
+          <div onClick={() => this.switchBtn()} className={style.switchBtn}>
+            換
+          </div>
           <ControlTab
             currentYearMonthTabs={this.getCurrentYearMonthTabs(
               currentYearMonth,
