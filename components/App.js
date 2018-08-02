@@ -307,6 +307,4 @@ class App extends React.Component {
     return <div>Loading...</div>; //2
   }
 }
-
-// export default hot(module)(App);
 export default App;

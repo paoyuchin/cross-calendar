@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Test from './index.js';
+import Entry from './index.js';
 
 const customSettings = {
   dataSource: './json/data1.json',
@@ -32,26 +32,15 @@ const customSettings = {
   onClickPrev(data) {
     console.log(data);
   },
-  // onClickNext(getMonthInfo) {
-  //   console.log(getMonthInfo);
-  // },
+  onClickNext(data) {
+    console.log(data);
+  },
   onClickDate(data) {
     console.log(data);
   },
 };
-// [{
-//   "guaranteed": true, // {boolean}
-//   "date": "2017/07/01", // {string} YYYY/MM/DD
-//   "price": "234567", // {string|number} XXXXXX | 近期上架
-//   "availableVancancy": 100, // {number}
-//   "totalVacnacy": 20, // {number}
-//   "status": "報名" // {string} 報名 | 後補 | 預定 | 截止 | 額滿 | 關團
-// },
-//   // ...
-// ]
-
 ReactDOM.render(
-  <Test
+  <Entry
     ref={app => {
       window.app = app;
     }}
