@@ -59,16 +59,14 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.option = Object.assign(ModuleDefaults, this.props.config);
-    //assign this.props.config to ModuleDefaults and warum
-    this.state = {
-      error: null,
-      isLoaded: false,
-      data: [], // 1
-    };
+
     this.data = {};
     this.state = {
       currentYearMonth: this.option.initYearMonth,
       dayState: true,
+      error: null,
+      isLoaded: false,
+      data: [], // 1
     };
   }
   nextMonth() {
@@ -85,16 +83,19 @@ class App extends React.Component {
     for (let i = 0; i < data.length; i++) {
       this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
     }
-    this.forceUpdate();
+    // this.forceUpdate();
+    this.setState(this.state);
   }
   inputData(data) {
     for (let i = 0; i < data.length; i++) {
       this.addEvent(data[i]); // 讓data的每一個放進當作參數，執行addEvent
     }
-    this.forceUpdate();
+    this.setState(this.state);
+    // this.forceUpdate();
   }
 
-  //3
+
+
   componentDidMount() {
     if (typeof this.option.dataSource === 'string') {
       fetch(this.option.dataSource)
@@ -116,10 +117,11 @@ class App extends React.Component {
               error,
             });
           },
-      );
+        );
     } else {
       this.readData(this.option.dataSource);
     }
+    // console.log(this.data)
   }
   readData(data) {
     for (let i = 0; i < data.length; i++) {
@@ -153,6 +155,7 @@ class App extends React.Component {
     }
     return nodes;
   }
+
 
   getAllYearMonth() {
     const yearMonth = [];
@@ -241,7 +244,7 @@ class App extends React.Component {
   focused(data) {
     if (data.date) {
       this.setState(() => ({
-        currentNode: data.date,
+        currentNode: data.date, //update
       }));
     }
     if (data.price) {
@@ -259,8 +262,9 @@ class App extends React.Component {
       }
     }
     currentYearMonth = allYearMonth[thisIndex + target].title;
+    console.log('currentYearMonth', currentYearMonth);
     this.setState(Object.assign(this.state, { currentYearMonth }));
-    //要更新state狀態 所以更新this.state的currentYearMonth
+    //更新state  this.setState的currentYearMonth
     let getMonthInfo = this.getCurrentNodes(currentYearMonth);
     for (let i = 0; i < 42; i++) {
       if (getMonthInfo[i].price) {
@@ -270,9 +274,10 @@ class App extends React.Component {
   }
 
   switchBtn() {
+    // console.log(this.state)
     this.setState(origState => ({
       //origState is this.state
-      dayState: !origState.dayState,
+      dayState: !origState.dayState, //false
     }));
   }
 
@@ -297,8 +302,8 @@ class App extends React.Component {
           />
           <Board
             currentNodes={this.getCurrentNodes(currentYearMonth)}
+            // focused={data => this.focused(data)}
             focused={data => this.focused(data)}
-            // focused={(data) => this.focused(data)}
             currentNode={currentNode}
           />
         </div>

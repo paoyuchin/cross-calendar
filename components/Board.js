@@ -23,8 +23,5 @@ const Board = ({ currentNodes, currentNode, focused }) => {
   );
 };
 
-// Board.propTypes = {
-//   title: PropTypes.string,
-// };
 
 export default Board;

@@ -25,8 +25,4 @@ const ControlTab = ({ currentYearMonthTabs , handleClick}) => {
   );
 };
 
-ControlTab.propTypes = {
-  title: PropTypes.string,
-};
-
 export default ControlTab;

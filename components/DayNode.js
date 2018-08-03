@@ -7,6 +7,7 @@ import { get } from 'http';
 
 const DayNode = ({ data, currentNode, focused }) => {
   let momentDate = moment(data.date);
+  //default empty
   let weekIndex = momentDate.day();
   let hasData = '';
   let disabled = '';
@@ -14,7 +15,7 @@ const DayNode = ({ data, currentNode, focused }) => {
   let focus = '';
   let tag = '';
   let weekDayArr = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-
+  //add scc style
   if (data.status) {
     hasData = style.hasData;
     data.total = '團位' + data.total;
@@ -47,8 +48,5 @@ const DayNode = ({ data, currentNode, focused }) => {
   );
 };
 
-// Board.propTypes = {
-//   title: PropTypes.string,
-// };
 
 export default DayNode;
