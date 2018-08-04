@@ -56,9 +56,9 @@ const customSettings = {
 
 window.calendar = ReactDOM.render(
   <Entry
-    ref={app => {
-      window.app = app; //window.app 
-    }}
+    // ref={app => {
+    //   window.app = app; //window.app 
+    // }}
     config={customSettings}
   />,
   document.getElementById('app'),
